@@ -1,18 +1,16 @@
-var http = require('http');  
-var url=require('url');  
-var fs=require('fs');  
-var io=require('socket.io')(http);  
+const http = require('http');  
+const url=require('url');  
+const fs=require('fs');  
+const io=require('socket.io')(http);  
 
 const  users = {}  //to store users
   
-var server= http.createServer(function(request,response){  
+const server= http.createServer(function(request,response){  
     var path = url.parse(request.url).pathname; 
-    switch(path) {  
-                
+    switch(path) {                 
         case '/' :  
             fs.readFile(__dirname + path + '/chat.html', function(error,data){  
-                if(error)  
-                {   
+                if(error) {   
                    response.writeHead(404);  
                    response.write(error);  
                    response.end();   
@@ -41,7 +39,7 @@ var listener = io.listen(server);
 listener.sockets.on('connection', function(socket){  
    
     socket.on('new-user', name => {
-        users[socket.id] = name;
+        users[socket.id] = name; //assigning a user with unique id
         socket.broadcast.emit('user-connected', name);
     });
       
