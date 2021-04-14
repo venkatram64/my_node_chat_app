@@ -23,7 +23,7 @@ const server= http.createServer(function(request,response){
             break;  
         default :  
             response.writeHead(404);  
-            response.write("opps this doesn't exist - 404");  
+            response.write("page not found - 404");  
             response.end();  
             break;  
     }  
@@ -34,22 +34,24 @@ server.listen(3000, () => {
     console.log("Server is running on 3000 port");
 });  
 
-var listener = io.listen(server); 
+const listener = io.listen(server); 
 
 listener.sockets.on('connection', function(socket){  
-   
+   //receiving message from client
     socket.on('new-user', name => {
         users[socket.id] = name; //assigning a user with unique id
+        //sending message to all the clients
         socket.broadcast.emit('user-connected', name);
     });
-      
+    //receiving message from the client  
     socket.on('send-chat-message', (message) =>{  
-        //console.log(message);  
+        //sending message to all the clients
         socket.broadcast.emit('chat-message', 
             {message: message, name: users[socket.id] } ); //to send every one, excluding sender
     }); 
     
     socket.on('disconnect', () => {
+        //sending message to all the clients
         socket.broadcast.emit('user-disconnected', users[socket.id])
         delete users[socket.id];
     });
