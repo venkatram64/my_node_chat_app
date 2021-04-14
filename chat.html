@@ -1,0 +1,55 @@
+<html>  
+    <script src="/socket.io/socket.io.js"></script> 
+    <script type="module">  //to defer the inline script
+
+      const messageContainer = document.getElementById('message-container');
+      const messageForm = document.getElementById('send-container');
+      const messageInput = document.getElementById('message-input');
+
+      const name = prompt('What is you name?');
+      appendMessage('You joined');
+
+      const socket = io(); 
+      socket.emit('new-user', name);
+
+      socket.on('chat-message', data => {
+        //console.log(data);
+        appendMessage(`${data.name}: ${data.message}`);
+      }); 
+      
+      socket.on('user-connected', name => {
+        //console.log(data);
+        appendMessage(`${name} connected`);
+      }); 
+
+      socket.on('user-disconnected', name => {
+        //console.log(data);
+        appendMessage(`${name} disconnected`);
+      });
+      
+      messageForm.addEventListener('submit', e => {
+        e.preventDefault();
+        const message = messageInput.value;
+        appendMessage(`You: ${message}`);
+        socket.emit('send-chat-message', message);
+        messageInput.value = '';
+      });
+
+      function appendMessage(message){
+        const messageElement = document.createElement('div');
+        messageElement.innerText = message;
+        messageContainer.append(messageElement);
+      }
+                     
+    </script>  
+  <head>  
+    <title>Socket IO chat</title>  
+  </head>  
+  <body>    
+    <form id="send-container"> 
+        <input id="message-input" autocomplete="off" />
+        <button type="submit" id="send-button">Send</button>  
+    </form> 
+    <div id="message-container"></div>  
+  </body>  
+</html> 
