@@ -10,6 +10,7 @@
       appendMessage('You joined');
 
       const socket = io(); 
+      //joining new user, and sending to the server
       socket.emit('new-user', name); //sending message to server
 
       //receiving message
@@ -18,13 +19,13 @@
         appendMessage(`${data.name}: ${data.message}`);
       }); 
       
-      //receiving message
+      //receiving message related to the new user joining
       socket.on('user-connected', name => {
         //console.log(name);
         appendMessage(`${name} connected`);
       }); 
 
-      //receiving message
+      //receiving message for user is leaving from the chat
       socket.on('user-disconnected', name => {
         //console.log(name);
         appendMessage(`${name} disconnected`);
