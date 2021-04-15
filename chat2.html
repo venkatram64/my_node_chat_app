@@ -18,19 +18,16 @@
         appendMessage(`${data.name}: ${data.message}`);
       }); 
       
-      //receiving message
       socket.on('user-connected', name => {
         //console.log(name);
         appendMessage(`${name} connected`);
       }); 
 
-      //receiving message
       socket.on('user-disconnected', name => {
         //console.log(name);
         appendMessage(`${name} disconnected`);
       });
-
-      //handling form submit
+      
       messageForm.addEventListener('submit', e => {
         e.preventDefault(); //to prevent page refresh for form submit
         const message = messageInput.value;
@@ -39,7 +36,6 @@
         messageInput.value = '';
       });
 
-      //utility function
       function appendMessage(message){
         const messageElement = document.createElement('div');
         messageElement.innerText = message;
